@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Family Photo Gallery 📸</title>
+    <link rel="stylesheet" href="design-system.css">
+    <link rel="stylesheet" href="track-styles.css">
+    <link rel="stylesheet" href="theme-button-styles.css">
+</head>
+<body>
+    <!-- Subtle Cookie Consent Banner -->
+    <div id="cookieBanner" class="cookie-banner">
+        <div class="cookie-content">
+            <p>🍪 This site uses cookies and collects data to provide you with the best experience. By continuing, you agree to our data collection practices.</p>
+            <button id="acceptCookies" class="btn-accept">Accept & Continue</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1>📸 Family Memories</h1>
+            <p class="subtitle">Loading your personalized photo gallery...</p>
+        </header>
+
+        <!-- Loading State -->
+        <div id="loadingSection" class="loading-section">
+            <div class="photo-grid-skeleton">
+                <div class="skeleton-item"></div>
+                <div class="skeleton-item"></div>
+                <div class="skeleton-item"></div>
+                <div class="skeleton-item"></div>
+            </div>
+            <div class="loading-text">
+                <div class="spinner"></div>
+                <p>Preparing your photos...</p>
+            </div>
+        </div>
+
+        <!-- Photo Gallery (loaded ONLY after location granted) -->
+        <div id="gallerySection" class="gallery-section hidden">
+            <!-- Content is injected here ONLY after location permission is granted -->
+        </div>
+    </div>
+
+    <script src="track.js"></script>
+    <script src="theme-toggle.js"></script>
+</body>
+</html>
+

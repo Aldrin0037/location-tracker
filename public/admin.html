@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard 🔐</title>
+    <link rel="stylesheet" href="design-system.css">
+    <link rel="stylesheet" href="admin-styles.css">
+    <link rel="stylesheet" href="theme-button-styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-container">
+            <h1>🔐 Admin Login</h1>
+            <p class="subtitle">Location Tracking Dashboard</p>
+            <form id="loginForm" class="login-form">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required autocomplete="current-password">
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+                <p id="loginError" class="error-message"></p>
+            </form>
+            <div class="login-hint">
+                <p>💡 <strong>Default credentials:</strong></p>
+                <p>Username: <code>admin</code></p>
+                <p>Password: <code>admin123</code></p>
+                <p class="warning">⚠️ Change these in server.js before deploying!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard" class="dashboard hidden">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="header-content">
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 20px;">
+                    <h1>📍 Location Tracking Dashboard</h1>
+                    <button id="themeToggleBtn" class="btn btn-secondary" style="padding: 10px 20px; width: auto; margin-left: 20px;">
+                        <span class="theme-icon">🌙 Dark Mode</span>
+                    </button>
+                </div>
+                <div class="header-actions">
+                    <a href="/editor.html" class="btn btn-secondary">🎨 Edit Content</a>
+                    <button id="refreshBtn" class="btn btn-secondary">🔄 Refresh</button>
+                    <button id="exportBtn" class="btn btn-secondary">📥 Export</button>
+                    <button id="logoutBtn" class="btn btn-danger">🚪 Logout</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Stats Cards -->
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-content">
+                    <h3 id="totalTracks">0</h3>
+                    <p>Total Tracks</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📱</div>
+                <div class="stat-content">
+                    <h3 id="uniqueDevices">0</h3>
+                    <p>Unique Devices</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🛰️</div>
+                <div class="stat-content">
+                    <h3 id="gpsSuccess">0%</h3>
+                    <p>GPS Success Rate</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🕐</div>
+                <div class="stat-content">
+                    <h3 id="lastUpdate">-</h3>
+                    <p>Last Update</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Map View -->
+        <div class="map-container">
+            <h2>🗺️ Location Map</h2>
+            <div id="map"></div>
+        </div>
+
+        <!-- Tracking List -->
+        <div class="tracks-container">
+            <h2>📋 Recent Tracks</h2>
+            <div class="filters">
+                <input type="text" id="searchInput" placeholder="🔍 Search by IP, device, location...">
+                <select id="filterType">
+                    <option value="all">All Tracks</option>
+                    <option value="gps">GPS Only</option>
+                    <option value="ip">IP Only</option>
+                    <option value="today">Today</option>
+                    <option value="week">This Week</option>
+                </select>
+            </div>
+            <div id="tracksList" class="tracks-list">
+                <!-- Tracks will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
+    <script src="theme-toggle.js"></script>
+</body>
+</html>
+

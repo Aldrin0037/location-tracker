@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content Editor 🎨</title>
+    <link rel="stylesheet" href="design-system.css">
+    <link rel="stylesheet" href="admin-styles.css">
+    <link rel="stylesheet" href="theme-button-styles.css">
+    <style>
+        .editor-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px;
+        }
+
+        .editor-header {
+            margin-bottom: 30px;
+        }
+
+        .editor-header h1 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .back-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .pages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .page-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: calc(var(--radius) * 2);
+            padding: 25px;
+            box-shadow: var(--shadow-offset-x) var(--shadow-offset-y) 
+                        var(--shadow-blur) var(--shadow-spread) 
+                        hsl(0 0% 0% / var(--shadow-opacity));
+            transition: all 0.2s ease;
+        }
+
+        .page-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px hsl(0 0% 0% / 0.15);
+        }
+
+        .page-card h3 {
+            color: var(--foreground);
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+        }
+
+        .page-url {
+            font-family: var(--font-mono);
+            background: var(--accent);
+            padding: 8px 12px;
+            border-radius: var(--radius);
+            font-size: 14px;
+            margin-bottom: 15px;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .page-info {
+            margin-bottom: 15px;
+        }
+
+        .page-info p {
+            color: var(--muted-foreground);
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .page-info strong {
+            color: var(--foreground);
+        }
+
+        .page-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: var(--primary);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .modal-content {
+            background-color: var(--card);
+            border: 1px solid var(--border);
+            margin: 5% auto;
+            padding: 40px;
+            border-radius: calc(var(--radius) * 3);
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 50px hsl(0 0% 0% / 0.3);
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .modal-header h2 {
+            color: var(--primary);
+            margin: 0;
+            font-weight: 700;
+        }
+
+        .close-btn {
+            font-size: 30px;
+            font-weight: bold;
+            color: #aaa;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+        }
+
+        .close-btn:hover {
+            color: #000;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--foreground);
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            background: var(--background);
+            color: var(--foreground);
+            border-radius: var(--radius);
+            font-size: 15px;
+            font-family: var(--font-sans);
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--ring);
+            box-shadow: 0 0 0 3px hsl(from var(--ring) h s l / 0.1);
+        }
+
+        .form-hint {
+            font-size: 13px;
+            color: var(--muted-foreground);
+            margin-top: 5px;
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 13px;
+            width: auto;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 12px 20px;
+            border-radius: var(--radius);
+            margin-bottom: 20px;
+            display: none;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px 20px;
+            border-radius: var(--radius);
+            margin-bottom: 20px;
+            display: none;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="editor-container">
+        <div class="editor-header">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 20px;">
+                <a href="/admin" class="back-link">← Back to Dashboard</a>
+                <button id="themeToggleBtn" class="btn btn-secondary" style="padding: 8px 16px; width: auto;">
+                    <span class="theme-icon">🌙 Dark Mode</span>
+                </button>
+            </div>
+            <h1>🎨 Content Editor</h1>
+            <p>Customize your tracking pages - Change URLs, themes, photos, and embed content</p>
+        </div>
+
+        <div id="successMessage" class="success-message"></div>
+        <div id="errorMessage" class="error-message"></div>
+
+        <div id="pagesGrid" class="pages-grid">
+            <!-- Pages will be loaded here -->
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Page</h2>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+
+            <form id="editForm">
+                <input type="hidden" id="pageKey" />
+
+                <div class="form-group">
+                    <label>Enabled</label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="pageEnabled">
+                        <span class="toggle-slider"></span>
+                    </label>
+                    <div class="form-hint">Toggle to enable/disable this tracking page</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Page URL</label>
+                    <input type="text" id="pageUrl" placeholder="/photos" required>
+                    <div class="form-hint">The URL path people will visit (e.g., /photos, /delivery, /share)</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Page Title</label>
+                    <input type="text" id="pageTitle" placeholder="Family Photo Album 📸" required>
+                    <div class="form-hint">Browser tab title and main heading</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Subtitle</label>
+                    <input type="text" id="pageSubtitle" placeholder="Memories from 2024">
+                    <div class="form-hint">Text shown below the title</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Loading Text</label>
+                    <input type="text" id="pageLoadingText" placeholder="Loading your photos...">
+                    <div class="form-hint">Text shown while loading</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Theme Type</label>
+                    <select id="pageTheme" onchange="updateThemeFields()">
+                        <option value="gallery">Photo Gallery</option>
+                        <option value="delivery">Package Delivery</option>
+                        <option value="video">Video/Embed</option>
+                        <option value="custom">Custom HTML</option>
+                    </select>
+                </div>
+
+                <div id="themeFields">
+                    <!-- Dynamic fields will appear here based on theme -->
+                </div>
+
+                <div class="form-group">
+                    <label>Custom Embed Code (Optional)</label>
+                    <textarea id="pageEmbedCode" placeholder="<iframe src='...'></iframe>"></textarea>
+                    <div class="form-hint">Add custom HTML/iframe to embed (YouTube, Instagram, etc.)</div>
+                </div>
+
+                <div class="page-actions">
+                    <button type="submit" class="btn btn-primary">💾 Save Changes</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="editor.js"></script>
+    <script src="theme-toggle.js"></script>
+</body>
+</html>
+
