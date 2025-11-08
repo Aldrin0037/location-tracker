@@ -1,6 +1,6 @@
 // Admin login endpoint
 import { NextRequest, NextResponse } from 'next/server';
-import { validateAdminCredentials } from '@/app/lib/utils';
+import { validateAdminCredentials } from '@/app/lib/utils-server';
 
 export async function POST(request: NextRequest) {
   try {

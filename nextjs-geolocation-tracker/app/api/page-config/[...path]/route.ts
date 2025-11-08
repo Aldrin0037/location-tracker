@@ -1,13 +1,14 @@
 // Dynamic page configuration endpoint
 import { NextRequest, NextResponse } from 'next/server';
-import { loadConfig } from '@/app/lib/utils';
+import { loadConfig } from '@/app/lib/utils-server';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { path: string[] } }
+  { params }: { params: Promise<{ path: string[] }> }
 ) {
   try {
-    const pagePath = '/' + params.path.join('/');
+    const { path: pathArray } = await params;
+    const pagePath = '/' + pathArray.join('/');
     
     const config = await loadConfig();
     

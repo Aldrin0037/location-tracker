@@ -1,6 +1,6 @@
 // Admin configuration management
 import { NextRequest, NextResponse } from 'next/server';
-import { loadConfig, saveConfig } from '@/app/lib/utils';
+import { loadConfig, saveConfig } from '@/app/lib/utils-server';
 
 // GET configuration
 export async function GET(request: NextRequest) {

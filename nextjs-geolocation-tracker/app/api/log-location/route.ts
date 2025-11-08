@@ -1,13 +1,13 @@
 // Standard location logging endpoint (with consent)
 import { NextRequest, NextResponse } from 'next/server';
 import { addTrack } from '@/app/lib/database';
-import { getClientIP, checkRateLimit } from '@/app/lib/utils';
+import { getClientIP, checkRateLimit } from '@/app/lib/utils-server';
 import { TrackData, IPLocation } from '@/app/types';
 import axios from 'axios';
 
 export async function POST(request: NextRequest) {
   try {
-    const clientIP = getClientIP(request);
+    const clientIP = await getClientIP(request);
     
     // Rate limiting
     if (!checkRateLimit(clientIP, 10, 5 * 60 * 1000)) {

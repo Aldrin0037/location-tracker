@@ -46,9 +46,9 @@ export async function addTrack(trackData: TrackData): Promise<{ success: boolean
     const trackId = `track_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     
     const newTrack: Track = {
+      ...trackData,
       id: trackId,
-      timestamp: new Date().toISOString(),
-      ...trackData
+      timestamp: trackData.timestamp || new Date().toISOString()
     };
     
     db.tracks.push(newTrack);

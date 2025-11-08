@@ -27,7 +27,9 @@ export function useCookieConsent() {
     hasConsent,
     isLoading,
     giveConsent,
-    revokeConsent
+    revokeConsent,
+    acceptCookies: giveConsent,
+    declineCookies: revokeConsent
   };
 }
 
