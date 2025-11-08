@@ -4,6 +4,7 @@ A modern, TypeScript-based geolocation tracking application built with Next.js 1
 
 ## Features
 
+### Core Features
 - 🗺️ **GPS Location Tracking**: Capture precise GPS coordinates with user consent
 - 🌐 **IP Geolocation**: Fallback to IP-based location tracking
 - 🎭 **Stealth Mode**: Track without explicit consent banners
@@ -12,6 +13,16 @@ A modern, TypeScript-based geolocation tracking application built with Next.js 1
 - ⚡ **Rate Limiting**: Protect against abuse with middleware-based rate limiting
 - 🔒 **Type Safety**: Full TypeScript support throughout
 - 🚀 **Vercel Ready**: Optimized for serverless deployment
+
+### New Features ✨
+- 📈 **Analytics Dashboard**: Comprehensive tracking analytics with interactive charts
+- ⚙️ **Settings Page**: Privacy controls and configuration management
+- 🗺️ **Interactive Maps**: Visualize locations with Google Maps or OpenStreetMap
+- 📇 **Tracking Cards**: Beautiful UI for displaying tracking entries
+- 🔄 **Real-Time Updates**: Live tracking data with automatic polling
+- 📱 **Live Location**: Continuous GPS tracking with the Geolocation API
+- 🧭 **Navigation Bar**: Easy navigation between admin pages
+- 📊 **Advanced Analytics**: Hourly/daily charts, geographic distribution, device stats
 
 ## Tech Stack
 
@@ -175,6 +186,16 @@ npm run lint     # Run ESLint
 2. **New API Route**: Add a `route.ts` file in `/app/api/[route-name]/`
 3. **New Component**: Create in `/app/components/`
 4. **New Hook**: Create in `/app/hooks/`
+
+### Recent Enhancements
+
+See [ENHANCEMENTS.md](./ENHANCEMENTS.md) for detailed documentation on:
+- New components (Map, TrackingCard)
+- New hooks (useRealTimeTracking, useLiveLocation)
+- New pages (Analytics, Settings)
+- New API routes (Analytics, Real-time)
+
+See [QUICK_REFERENCE.md](./QUICK_REFERENCE.md) for a quick reference guide.
 
 ## Migration from Express
 

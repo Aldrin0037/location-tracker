@@ -130,7 +130,7 @@ export default function AdminPage() {
   }
   
   return (
-    <Layout>
+    <Layout showNavigation={true}>
       <div className="max-w-7xl mx-auto">
         <header className="flex justify-between items-center mb-8">
           <h1 className="text-4xl font-bold text-gray-800 dark:text-gray-100">
