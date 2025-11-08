@@ -1,0 +1,34 @@
+# Documentation files (not needed in production)
+*.md
+!README.md
+
+# Development files
+.git
+.gitignore
+.env.local
+.env.development
+node_modules
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# Test files (if you add them later)
+test/
+tests/
+*.test.js
+*.spec.js
+
+# Local data files (don't deploy local database)
+tracking-data.json
+
+# Deployment files for other platforms
+Procfile
+
