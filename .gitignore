@@ -30,3 +30,16 @@ Thumbs.db
 # Heroku
 .heroku/
 
+# Tracking Data (SENSITIVE)
+tracking-data.json
+config.json
+
+# Temporary files
+*.tmp
+*.bak
+public/legacy/
+
+# Python scripts  
+*.py
+__pycache__/
+
