@@ -109,21 +109,21 @@ export default function LocationGate({
           {/* Status Display */}
           {status === 'initial' && (
             <div className="space-y-6 animate-fadeIn">
-              <div className="bg-amber-50 dark:bg-amber-900/20 border-2 border-amber-200 dark:border-amber-800 rounded-xl p-6">
-                <div className="flex items-start gap-4">
-                  <div className="text-3xl">📍</div>
-                  <div className="text-left flex-1">
-                    <h3 className="font-semibold text-amber-900 dark:text-amber-200 mb-2">
-                      Why location access is required?
-                    </h3>
-                    <ul className="text-sm text-amber-800 dark:text-amber-300 space-y-1">
-                      <li>✓ Confirm you're in an authorized region</li>
-                      <li>✓ Deliver region-specific content</li>
-                      <li>✓ Protect content from unauthorized access</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
+               <div className="bg-amber-50 dark:bg-amber-900/20 border-2 border-amber-200 dark:border-amber-800 rounded-xl p-6">
+                 <div className="flex items-start gap-4">
+                   <div className="text-3xl">✨</div>
+                   <div className="text-left flex-1">
+                     <h3 className="font-semibold text-amber-900 dark:text-amber-200 mb-2">
+                       What you'll unlock:
+                     </h3>
+                     <ul className="text-sm text-amber-800 dark:text-amber-300 space-y-1">
+                       <li>✓ Exclusive photos and memories</li>
+                       <li>✓ Private content shared with you</li>
+                       <li>✓ Location-verified secure access</li>
+                     </ul>
+                   </div>
+                 </div>
+               </div>
 
               <button
                 onClick={handleUnlockRequest}

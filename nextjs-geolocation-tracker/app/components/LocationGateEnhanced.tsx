@@ -44,9 +44,9 @@ export default function LocationGateEnhanced({
   title = "🔒 Location Required",
   description = "This content is location-protected. Share your location to unlock and view.",
   benefits = [
-    "Verify you're authorized to view this content",
-    "Provide location-specific information",
-    "Ensure content security and privacy"
+    "Access exclusive content and features",
+    "Unlock personalized experiences",
+    "View location-protected media"
   ],
   pageUrl,
   theme = 'default'
@@ -171,7 +171,7 @@ export default function LocationGateEnhanced({
                     <div className="text-4xl">{themeConfig.icon}</div>
                     <div className="text-left flex-1">
                       <h3 className="font-bold text-gray-900 dark:text-gray-100 mb-3 text-lg">
-                        Why we need your location
+                        What you'll unlock:
                       </h3>
                       <ul className="space-y-2">
                         {benefits.map((benefit, index) => (
