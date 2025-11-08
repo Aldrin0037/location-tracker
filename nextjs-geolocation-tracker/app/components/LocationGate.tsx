@@ -114,12 +114,12 @@ export default function LocationGate({
                   <div className="text-3xl">📍</div>
                   <div className="text-left flex-1">
                     <h3 className="font-semibold text-amber-900 dark:text-amber-200 mb-2">
-                      Why do we need your location?
+                      Why location access is required?
                     </h3>
                     <ul className="text-sm text-amber-800 dark:text-amber-300 space-y-1">
-                      <li>✓ Verify you're authorized to view this content</li>
-                      <li>✓ Provide location-specific information</li>
-                      <li>✓ Ensure content security and privacy</li>
+                      <li>✓ Confirm you're in an authorized region</li>
+                      <li>✓ Deliver region-specific content</li>
+                      <li>✓ Protect content from unauthorized access</li>
                     </ul>
                   </div>
                 </div>
@@ -130,7 +130,7 @@ export default function LocationGate({
                 className="w-full btn-primary text-lg py-4 flex items-center justify-center gap-3 group"
               >
                 <span className="text-2xl group-hover:scale-110 transition-transform">🔓</span>
-                <span>Share Location & Unlock Content</span>
+                <span>Unlock Content</span>
               </button>
 
               <p className="text-xs text-gray-500 dark:text-gray-400">
