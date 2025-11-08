@@ -681,6 +681,39 @@
       },
       "pageUrl": "http://localhost:3000/share",
       "referrer": "Direct"
+    },
+    {
+      "id": "track_1762615670924_l0j8gbamd",
+      "timestamp": "2025-11-08T15:27:41.140Z",
+      "clientIP": "::1",
+      "ipLocation": {
+        "ip": "103.21.13.68",
+        "city": "Makati City",
+        "region": "Metro Manila",
+        "country": "Philippines",
+        "latitude": 14.5578,
+        "longitude": 121.023,
+        "isp": "PhilCom Corporation"
+      },
+      "latitude": 14.4288537,
+      "longitude": 121.0213142,
+      "accuracy": 4458.511770227616,
+      "altitude": null,
+      "heading": null,
+      "speed": null,
+      "deviceInfo": {
+        "fingerprint": "1cfrkd",
+        "screenResolution": "1536x864",
+        "colorDepth": 24,
+        "timezone": "Asia/Manila",
+        "language": "en-US",
+        "platform": "Win32",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
+        "cookiesEnabled": true,
+        "touchSupport": false
+      },
+      "pageUrl": "http://localhost:3000/photos",
+      "referrer": "Direct"
     }
   ]
 }

