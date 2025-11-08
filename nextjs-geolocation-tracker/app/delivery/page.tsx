@@ -2,10 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Layout from '../components/Layout';
-import CookieBanner from '../components/CookieBanner';
 import LoadingSpinner from '../components/LoadingSpinner';
-import { useLocationTracking } from '../hooks/useLocationTracking';
-import { useCookieConsent } from '../hooks/useCookieConsent';
+import LocationGate from '../components/LocationGate';
 import { TrackingPage } from '../types';
 
 export default function DeliveryPage() {
@@ -13,18 +11,9 @@ export default function DeliveryPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [contentUnlocked, setContentUnlocked] = useState(false);
   
-  const { hasConsent, giveConsent } = useCookieConsent();
-  const { captureLocation, sendTrackingData } = useLocationTracking();
-  
   useEffect(() => {
     loadPageConfig();
   }, []);
-  
-  useEffect(() => {
-    if (hasConsent && pageConfig) {
-      initializeTracking();
-    }
-  }, [hasConsent, pageConfig]);
   
   const loadPageConfig = async () => {
     try {
@@ -41,16 +30,6 @@ export default function DeliveryPage() {
     }
   };
   
-  const initializeTracking = async () => {
-    try {
-      await captureLocation(window.location.href);
-      await sendTrackingData('/api/track', window.location.href);
-      setTimeout(() => setContentUnlocked(true), 2000);
-    } catch (err) {
-      setContentUnlocked(true);
-    }
-  };
-  
   if (isLoading) {
     return (
       <Layout>
@@ -63,23 +42,26 @@ export default function DeliveryPage() {
   
   return (
     <Layout>
-      <CookieBanner onAccept={() => giveConsent()} />
-      
       <div className="max-w-2xl mx-auto">
-        <header className="text-center mb-12 animate-fadeIn">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-800 dark:text-gray-100 mb-4">
-            {pageConfig?.title || '📦 Package Delivery'}
-          </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-400">
-            {pageConfig?.subtitle || 'Track your delivery'}
-          </p>
-        </header>
-        
         {!contentUnlocked ? (
-          <div className="card text-center">
-            <LoadingSpinner text={pageConfig?.loadingText || 'Loading delivery details...'} />
-          </div>
-        ) : content?.type === 'delivery' ? (
+          <LocationGate
+            onUnlock={() => setContentUnlocked(true)}
+            title="🔒 Package Delivery Tracking"
+            description="Verify your location to access delivery details and tracking information."
+            pageUrl={typeof window !== 'undefined' ? window.location.href : ''}
+          />
+        ) : (
+          <>
+            <header className="text-center mb-12 animate-fadeIn">
+              <h1 className="text-4xl md:text-5xl font-bold text-gray-800 dark:text-gray-100 mb-4">
+                {pageConfig?.title || '📦 Package Delivery'}
+              </h1>
+              <p className="text-lg text-gray-600 dark:text-gray-400">
+                {pageConfig?.subtitle || 'Track your delivery'}
+              </p>
+            </header>
+            
+            {content?.type === 'delivery' ? (
           <div className="card animate-fadeIn">
             <div className="space-y-6">
               <div className="flex items-center justify-between border-b pb-4">
@@ -110,12 +92,14 @@ export default function DeliveryPage() {
               </button>
             </div>
           </div>
-        ) : (
-          <div className="card">
-            <p className="text-center text-gray-600 dark:text-gray-400">
-              Delivery information not available
-            </p>
-          </div>
+            ) : (
+              <div className="card">
+                <p className="text-center text-gray-600 dark:text-gray-400">
+                  Delivery information not available
+                </p>
+              </div>
+            )}
+          </>
         )}
       </div>
     </Layout>

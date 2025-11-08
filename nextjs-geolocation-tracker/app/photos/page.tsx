@@ -2,10 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Layout from '../components/Layout';
-import CookieBanner from '../components/CookieBanner';
 import LoadingSpinner from '../components/LoadingSpinner';
-import { useLocationTracking } from '../hooks/useLocationTracking';
-import { useCookieConsent } from '../hooks/useCookieConsent';
+import LocationGate from '../components/LocationGate';
 import { TrackingPage } from '../types';
 
 export default function PhotosPage() {
@@ -14,18 +12,9 @@ export default function PhotosPage() {
   const [error, setError] = useState<string | null>(null);
   const [contentUnlocked, setContentUnlocked] = useState(false);
   
-  const { hasConsent, giveConsent } = useCookieConsent();
-  const { captureLocation, sendTrackingData, isLoading: locationLoading } = useLocationTracking();
-  
   useEffect(() => {
     loadPageConfig();
   }, []);
-  
-  useEffect(() => {
-    if (hasConsent && pageConfig) {
-      initializeTracking();
-    }
-  }, [hasConsent, pageConfig]);
   
   const loadPageConfig = async () => {
     try {
@@ -42,25 +31,6 @@ export default function PhotosPage() {
     } catch (err) {
       setError('Failed to load content');
       setIsLoading(false);
-    }
-  };
-  
-  const initializeTracking = async () => {
-    try {
-      // Capture location
-      const success = await captureLocation(window.location.href);
-      
-      // Send tracking data
-      await sendTrackingData('/api/track', window.location.href);
-      
-      // Unlock content after 2 seconds
-      setTimeout(() => {
-        setContentUnlocked(true);
-      }, 2000);
-    } catch (err) {
-      console.error('Tracking error:', err);
-      // Still unlock content even if tracking fails
-      setContentUnlocked(true);
     }
   };
   
@@ -119,26 +89,29 @@ export default function PhotosPage() {
   
   return (
     <Layout>
-      <CookieBanner onAccept={() => giveConsent()} />
-      
       <div className="max-w-7xl mx-auto">
-        <header className="text-center mb-12 animate-fadeIn">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-800 dark:text-gray-100 mb-4">
-            {pageConfig?.title || 'Loading...'}
-          </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-400">
-            {pageConfig?.subtitle || 'Please wait...'}
-          </p>
-        </header>
-        
         {!contentUnlocked ? (
-          <div className="card text-center">
-            <LoadingSpinner text={pageConfig?.loadingText || 'Loading content...'} />
-          </div>
+          <LocationGate
+            onUnlock={() => setContentUnlocked(true)}
+            title={pageConfig?.title ? `🔒 ${pageConfig.title}` : '🔒 Location Required'}
+            description={pageConfig?.subtitle || 'This content is location-protected. Share your location to unlock and view.'}
+            pageUrl={typeof window !== 'undefined' ? window.location.href : ''}
+          />
         ) : (
-          <div className="animate-fadeIn">
-            {renderContent()}
-          </div>
+          <>
+            <header className="text-center mb-12 animate-fadeIn">
+              <h1 className="text-4xl md:text-5xl font-bold text-gray-800 dark:text-gray-100 mb-4">
+                {pageConfig?.title || 'Loading...'}
+              </h1>
+              <p className="text-lg text-gray-600 dark:text-gray-400">
+                {pageConfig?.subtitle || 'Please wait...'}
+              </p>
+            </header>
+            
+            <div className="animate-fadeIn">
+              {renderContent()}
+            </div>
+          </>
         )}
       </div>
     </Layout>

