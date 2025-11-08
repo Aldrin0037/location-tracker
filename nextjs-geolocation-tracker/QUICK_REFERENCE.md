@@ -247,14 +247,9 @@ vercel logs
 
 ---
 
-## 🔒 Default Credentials
+## 🔒 Admin Credentials
 
-**⚠️ CHANGE THESE IN PRODUCTION!**
-
-```
-Username: admin
-Password: admin123
-```
+**⚠️ SET THESE IN PRODUCTION!**
 
 Set in `.env.local`:
 ```env

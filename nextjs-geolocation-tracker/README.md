@@ -79,7 +79,7 @@ npm install
 3. Set up environment variables:
 Create a `.env.local` file with:
 ```
-ADMIN_USERNAME=admin
+ADMIN_USERNAME=your_username
 ADMIN_PASSWORD=your_secure_password
 NODE_ENV=development
 ```
@@ -166,7 +166,7 @@ Edit `config.json` to customize tracking pages:
 - ✅ Display clear privacy policies
 - ✅ Comply with GDPR, CCPA, and local laws
 - ✅ Use strong admin credentials in production
-- ✅ Never use default credentials (`admin`/`admin123`)
+- ✅ Always set credentials via environment variables
 - ❌ Never track users without permission
 
 ## Development

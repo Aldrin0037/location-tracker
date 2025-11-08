@@ -31,9 +31,7 @@ The app will be available at **http://localhost:3000**
 
 #### 🔐 Test Admin Dashboard
 1. Open **http://localhost:3000/admin**
-2. Login with:
-   - Username: `admin`
-   - Password: `admin123`
+2. Login with your configured credentials
 3. View tracked locations
 4. Check statistics
 5. Export data as JSON
@@ -50,12 +48,12 @@ curl http://localhost:3000/api/health
 
 Create `.env.local` (already created):
 ```bash
-ADMIN_USERNAME=admin
-ADMIN_PASSWORD=admin123
+ADMIN_USERNAME=your_username
+ADMIN_PASSWORD=your_secure_password
 NODE_ENV=development
 ```
 
-**⚠️ IMPORTANT**: Change credentials before production!
+**⚠️ IMPORTANT**: Use strong credentials in production!
 
 ## 🎨 Available Pages
 

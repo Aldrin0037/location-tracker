@@ -98,7 +98,7 @@ Visit: **http://localhost:3000**
    - Package status
 
 5. **Admin Dashboard**: http://localhost:3000/admin
-   - Login: `admin` / `admin123`
+   - Login: Use your configured credentials
    - View tracked locations
    - Export data
 

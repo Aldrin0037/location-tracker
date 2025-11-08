@@ -90,8 +90,8 @@ export async function getPageConfig(pagePath: string): Promise<any> {
 
 // Validate admin credentials
 export function validateAdminCredentials(username: string, password: string): boolean {
-  const adminUsername = process.env.ADMIN_USERNAME || 'admin';
-  const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
+  const adminUsername = process.env.ADMIN_USERNAME || 'Aldrin';
+  const adminPassword = process.env.ADMIN_PASSWORD || 'Aldrin0921!';
   
   return username === adminUsername && password === adminPassword;
 }

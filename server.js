@@ -11,8 +11,8 @@ app.set('trust proxy', 1); // Enable trust proxy for Vercel/deployment platforms
 const PORT = process.env.PORT || 3000;
 
 // Admin credentials (CHANGE THESE IN PRODUCTION!)
-const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'admin';
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
+const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'Aldrin';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'Aldrin0921!';
 
 // Production security check
 if (process.env.NODE_ENV === 'production' && (!process.env.ADMIN_USERNAME || !process.env.ADMIN_PASSWORD)) {

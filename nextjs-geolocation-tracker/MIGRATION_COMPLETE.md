@@ -123,7 +123,7 @@ Test each page:
 - `/photos` → Photo gallery with tracking
 - `/track` → Stealth mode
 - `/delivery` → Delivery tracking
-- `/admin` → Dashboard (login: admin/admin123)
+- `/admin` → Dashboard (login: use configured credentials)
 
 ### 3. Building
 ```bash
