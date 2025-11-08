@@ -1,0 +1,7 @@
+{
+  "env": {
+    "ADMIN_USERNAME": "@admin-username",
+    "ADMIN_PASSWORD": "@admin-password"
+  }
+}
+
