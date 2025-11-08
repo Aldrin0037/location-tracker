@@ -309,7 +309,7 @@ export default function LocationGateEnhanced({
                     Location Verified!
                   </p>
                   <p className="text-xl text-gray-700 dark:text-gray-300 font-semibold">
-                    Decrypting content...
+                    Loading content...
                   </p>
                   
                   {/* Decryption effect */}

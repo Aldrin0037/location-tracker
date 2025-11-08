@@ -19,6 +19,7 @@ export default function Layout({ children, showThemeToggle = true, showNavigatio
   const navLinks = [
     { href: '/admin', label: '📊 Dashboard', icon: '📊' },
     { href: '/analytics', label: '📈 Analytics', icon: '📈' },
+			{ href: '/admin/pages', label: '📝 Pages', icon: '📝' },
     { href: '/settings', label: '⚙️ Settings', icon: '⚙️' },
   ];
 

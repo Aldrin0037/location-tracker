@@ -192,7 +192,7 @@ export default function LocationGate({
                   Location Verified!
                 </p>
                 <p className="text-lg text-gray-700 dark:text-gray-300">
-                  Decrypting content...
+                  Loading content...
                 </p>
                 
                 {/* Decryption effect */}
