@@ -76,10 +76,10 @@ export async function GET(request: NextRequest) {
     // Browser/Device stats
     const deviceMap = new Map<string, number>();
     tracks.forEach(track => {
-      if (track.userAgent) {
+      if (track.deviceInfo?.userAgent) {
         let device = 'Unknown';
-        if (track.userAgent.includes('Mobile')) device = 'Mobile';
-        else if (track.userAgent.includes('Tablet')) device = 'Tablet';
+        if (track.deviceInfo.userAgent.includes('Mobile')) device = 'Mobile';
+        else if (track.deviceInfo.userAgent.includes('Tablet')) device = 'Tablet';
         else device = 'Desktop';
         
         const count = deviceMap.get(device) || 0;

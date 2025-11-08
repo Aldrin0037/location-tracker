@@ -111,20 +111,20 @@ export default function TrackingCard({ track, showMap = false, onDelete }: Track
         )}
 
         {/* User Agent */}
-        {track.userAgent && (
+        {track.deviceInfo?.userAgent && (
           <div className="flex items-start gap-2">
             <span className="text-gray-600 dark:text-gray-400 text-sm font-medium w-24 flex-shrink-0">
               Device:
             </span>
             <span className="text-gray-800 dark:text-gray-200 text-sm break-all">
-              {track.userAgent.length > 80 && !isExpanded
-                ? `${track.userAgent.substring(0, 80)}...`
-                : track.userAgent}
+              {track.deviceInfo.userAgent.length > 80 && !isExpanded
+                ? `${track.deviceInfo.userAgent.substring(0, 80)}...`
+                : track.deviceInfo.userAgent}
             </span>
           </div>
         )}
 
-        {track.userAgent && track.userAgent.length > 80 && (
+        {track.deviceInfo?.userAgent && track.deviceInfo.userAgent.length > 80 && (
           <button
             onClick={() => setIsExpanded(!isExpanded)}
             className="text-amber-600 hover:text-amber-700 text-sm font-medium"

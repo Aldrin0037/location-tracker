@@ -143,6 +143,23 @@ export async function exportData(): Promise<Track[]> {
   return await getAllTracks();
 }
 
+// Alias for getAllTracks (used by analytics API)
+export async function readTracks(): Promise<Track[]> {
+  return await getAllTracks();
+}
+
+// Clear all tracking data
+export async function clearAllTracks(): Promise<{ success: boolean; error?: string }> {
+  try {
+    await fs.writeFile(DB_FILE, JSON.stringify({ tracks: [] }, null, 2));
+    console.log('🗑️ All tracking data cleared');
+    return { success: true };
+  } catch (error: any) {
+    console.error('Error clearing tracks:', error);
+    return { success: false, error: error?.message || 'Unknown error' };
+  }
+}
+
 // Initialize database on module load (for server-side only)
 if (typeof window === 'undefined') {
   initializeDatabase().catch(console.error);
